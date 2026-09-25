@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
 FONT_NAME="CyberpunkWaifus"
 FONT_FAMILY="$FONT_NAME"
 
@@ -39,24 +41,45 @@ NEW_FONT_FILE="${FONT_NAME}${font_size}.pf2"
 NEW_FONT_PATH="${THEME_DIR}/${NEW_FONT_FILE}"
 
 echo "🪶 Generating GRUB font..."
-sudo grub-mkfont -s "$font_size" -o "$NEW_FONT_PATH" "$FONT_SRC"
+
+if command -v grub-mkfont &>/dev/null; then
+  GRUB_MKFONT="grub-mkfont"
+elif command -v grub2-mkfont &>/dev/null; then
+  GRUB_MKFONT="grub2-mkfont"
+else
+  echo "Error: Could not locate grub-mkfont."
+  exit 1
+fi
+
+sudo "$GRUB_MKFONT" -s "$font_size" -o "$NEW_FONT_PATH" "$FONT_SRC"
 
 # Update theme.txt
-update_theme_file() {
-  local theme_file="$1"
+if [[ ! -f "$THEME_FILE" ]]; then
+  echo "Error: theme file is missing."
+  exit 1
+fi
 
-  if [[ ! -f "$theme_file" ]]; then
-    echo "Error: theme file is missing."
-    exit 1
-  fi
+echo "🗒️ Updating font reference in '$THEME_FILE'..."
 
-  echo "🗒️ Updating font reference in '$theme_file'..."
-
-  # Replace font name occurrences
-  sudo sed -i -E "s|(${FONT_NAME})[[:space:]]*[0-9]+|\1 ${font_size}|g" "$theme_file"
-}
-
-update_theme_file "$THEME_FILE"
+sudo sed -i -E "s|(${FONT_NAME})[[:space:]]*[0-9]+|\1 ${font_size}|g" "$THEME_FILE"
 
 echo "Font reference set to '${FONT_NAME} ${font_size}'."
+
+# Update config
+echo "Updating GRUB config..."
+
+if command -v update-grub &>/dev/null; then
+  sudo update-grub
+
+elif command -v grub2-mkconfig &>/dev/null; then
+  sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+
+elif command -v grub-mkconfig &>/dev/null; then
+  sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+else
+  echo "Error: Could not find a GRUB configuration command."
+  exit 1
+fi
+
 echo "Done!"
