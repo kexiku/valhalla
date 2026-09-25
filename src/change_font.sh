@@ -4,24 +4,23 @@ set -e
 SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 FONT_NAME="CyberpunkWaifus"
-FONT_FAMILY="$FONT_NAME"
 
 FONTS_DIR="$HOME/.local/share/fonts"
 THEME_DIR="/boot/grub/themes/valhalla"
 THEME_FILE="${THEME_DIR}/theme.txt"
 
-FONT_SRC="${FONTS_DIR}/${FONT_FAMILY}/${FONT_NAME}.ttf"
+FONT_SRC="${FONTS_DIR}/${FONT_NAME}.ttf"
 
 # Define font size
 echo -e "Write your preferred font size.\n"
 echo -e "💡 Recommended size values:\n"
-echo "╭ Screen resolution -| Font size ---╮"
-echo "|-----------------------------------|"
-echo "| 1280×720 (HD)      | 28           |"
-echo "| 1920x1080 (FullHD) | 42 (default) |"
-echo "| 2560×1440 (2K/QHD) | 56           |"
-echo "| 3840×2160 (4K/UHD) | 84           |"
-echo "╰-----------------------------------╯"
+echo "╭ Screen resolution -|- Font size ---╮"
+echo "|------------------------------------|"
+echo "| 1280×720 (HD)      | 28            |"
+echo "| 1920x1080 (FullHD) | 42 (default)  |"
+echo "| 2560×1440 (2K/QHD) | 56            |"
+echo "| 3840×2160 (4K/UHD) | 84            |"
+echo "╰------------------------------------╯"
 echo
 
 read -rp "Your size: " font_size
