@@ -23,7 +23,7 @@ echo "╰-----------------------------------╯"
 echo
 read -rp "Your size: " font_size
 
-if ! [[ "$font_size" =~ ^[0-9]+$ ]]; then
+if ! [[ "$font_size" =~ ^[1-9][0-9]*$ ]]; then
   echo "Error: size must be a positive integer."
   exit 1
 fi
