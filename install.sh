@@ -44,19 +44,7 @@ fi
 # Update config
 echo "🥃 Blending GRUB config..."
 
-if command -v update-grub &>/dev/null; then
-  sudo update-grub
-
-elif command -v grub2-mkconfig &>/dev/null; then
-  sudo grub2-mkconfig -o /boot/grub2/grub.cfg
-
-elif command -v grub-mkconfig &>/dev/null; then
-  sudo grub-mkconfig -o /boot/grub/grub.cfg
-
-else
-  echo "Error: Could not find a GRUB configuration command."
-  exit 1
-fi
+"${SOURCE_DIR}/src/update_grub.sh"
 
 # Change font size
 echo "If your screen resolution differs from 1920x1080, you might want to change the font size."
@@ -64,7 +52,7 @@ read -rp "Do you want to change it now? (y/n): " change_font
 
 if [[ "$change_font" =~ ^[Yy]$ ]]; then
   chmod +x "${SOURCE_DIR}/change_font.sh"
-  "${SOURCE_DIR}/change_font.sh"
+  "${SOURCE_DIR}/src/change_font.sh"
 else
   echo "Fallback to the default font size (42)."
 fi
