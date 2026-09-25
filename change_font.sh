@@ -1,69 +1,62 @@
-#!/usr/bin/env bash
-#
-# changeFont.sh — create and apply a new GRUB font
-# Usage: ./changeFont.sh <size>
-#
-
+#!/bin/bash
 set -e
 
-# === CONFIG ===
 FONT_NAME="CyberpunkWaifus"
-FONT_SRC="fonts/${FONT_NAME}.ttf"
-OUTPUT_DIR="grub/valhalla"
-THEME_FILE_LOCAL="${OUTPUT_DIR}/theme.txt"
-SYSTEM_THEME_DIR="/boot/grub/themes/valhalla"
-THEME_FILE_SYSTEM="${SYSTEM_THEME_DIR}/theme.txt"
+FONT_FAMILY="$FONT_NAME"
 
-# === CHECK ARGUMENTS ===
-if [[ $# -ne 1 ]]; then
-    echo "Usage: $0 <font-size>"
-    exit 1
+FONTS_DIR="$HOME/.local/share/fonts"
+THEME_DIR="/boot/grub/themes/valhalla"
+THEME_FILE="${THEME_DIR}/theme.txt"
+
+FONT_SRC="${FONTS_DIR}/${FONT_FAMILY}/${FONT_NAME}.ttf"
+
+# Define font size
+echo -e "Write your preferred font size.\n"
+echo -e "💡 Recommended size values:\n"
+echo "╭ Screen resolution -| Font size ---╮"
+echo "|-----------------------------------|"
+echo "| 1280×720 (HD)      | 28           |"
+echo "| 1920x1080 (FullHD) | 42 (default) |"
+echo "| 2560×1440 (2K/QHD) | 56           |"
+echo "| 3840×2160 (4K/UHD) | 84           |"
+echo "╰-----------------------------------╯"
+echo
+read -rp "Your size: " font_size
+
+if ! [[ "$font_size" =~ ^[0-9]+$ ]]; then
+  echo "Error: size must be a positive integer."
+  exit 1
 fi
 
-SIZE="$1"
-if ! [[ "$SIZE" =~ ^[0-9]+$ ]]; then
-    echo "Error: size must be a positive integer."
-    exit 1
-fi
-
-# === CHECK FONT SOURCE ===
+# Check font source
 if [[ ! -f "$FONT_SRC" ]]; then
-    echo "Error: font file not found at '$FONT_SRC'"
-    exit 1
+  echo "Error: font file not found at '$FONTS_DIR'."
+  exit 1
 fi
 
-# === ENSURE OUTPUT DIR EXISTS ===
-mkdir -p "$OUTPUT_DIR"
+# Generate font
+NEW_FONT_FILE="${FONT_NAME}${font_size}.pf2"
+NEW_FONT_PATH="${THEME_DIR}/${NEW_FONT_FILE}"
 
-# === GENERATE FONT ===
-NEW_FONT_FILE="${FONT_NAME}${SIZE}.pf2"
-NEW_FONT_PATH="${OUTPUT_DIR}/${NEW_FONT_FILE}"
+echo "🪶 Generating GRUB font..."
+sudo grub-mkfont -s "$font_size" -o "$NEW_FONT_PATH" "$FONT_SRC"
 
-echo "→ Generating GRUB font: ${NEW_FONT_PATH}"
-grub-mkfont -s "$SIZE" -o "$NEW_FONT_PATH" "$FONT_SRC"
-
-# === UPDATE THEME FILES ===
+# Update theme.txt
 update_theme_file() {
-    local theme_file="$1"
-    if [[ ! -f "$theme_file" ]]; then
-        echo "⚠️  Skipping missing file: $theme_file"
-        return
-    fi
+  local theme_file="$1"
 
-    echo "→ Updating font reference in: $theme_file"
-    # Replace occurrences like "CyberpunkWaifus 42" or "CyberpunkWaifus XX"
-    sed -i -E "s|(${FONT_NAME})[[:space:]]*[0-9]+|\1 ${SIZE}|g" "$theme_file"
+  if [[ ! -f "$theme_file" ]]; then
+    echo "Error: theme file is missing."
+    exit 1
+  fi
+
+  echo "🗒️ Updating font reference in '$theme_file'..."
+
+  # Replace font name occurrences
+  sudo sed -i -E "s|(${FONT_NAME})[[:space:]]*[0-9]+|\1 ${font_size}|g" "$theme_file"
 }
 
-update_theme_file "$THEME_FILE_LOCAL"
-update_theme_file "$THEME_FILE_SYSTEM"
+update_theme_file "$THEME_FILE"
 
-# === COPY TO SYSTEM THEME (if present) ===
-if [[ -d "$SYSTEM_THEME_DIR" ]]; then
-    echo "→ Copying font to $SYSTEM_THEME_DIR/"
-    cp "$NEW_FONT_PATH" "$SYSTEM_THEME_DIR/"
-fi
-
-echo "✅ Done!"
-echo "New font: ${NEW_FONT_PATH}"
-echo "Font reference updated to '${FONT_NAME} ${SIZE}' in theme files."
+echo "Font reference set to '${FONT_NAME} ${font_size}'."
+echo "Done!"
