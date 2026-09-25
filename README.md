@@ -1,46 +1,93 @@
+# <p align="center"> :cocktail: Grubhalla :cocktail: </p>
+### <p align="center"> <i> · Cyberpunk Sysadmin Action · </i> </p>
 
-## VA-11 HALL-A inspired dots with sddm and grub themes
-SDDM theme was made with [Silent](https://github.com/uiriansan/SilentSDDM) cus I'm lazy and it's not very usable if you have more than one user and change them constantly.
-### Screenshots
-| Workspaces  | Grub/SDDM |
-| ------------- | ------------- |
-| ![workspace1](https://github.com/happyzxzxz/valhallaDots/blob/main/screenshots/workspace1.png?raw=true)  | ![grub](https://github.com/happyzxzxz/valhallaDots/blob/main/screenshots/grub.png?raw=true)  |
-| ![workspace2](https://github.com/happyzxzxz/valhallaDots/blob/main/screenshots/workspace2.png?raw=true)  | ![sddm](https://github.com/happyzxzxz/valhallaDots/blob/main/screenshots/sddm_screen_1.png?raw=true)  |
-### What's used in here
-|Part|Name|
-|--|--|
-|Compositor|[Hyprland](https://github.com/hyprwm/Hyprland)|
-|Bar|[Waybar](https://github.com/Alexays/Waybar)|
-|App launcher|[Vicinae](https://github.com/vicinaehq/vicinae)|
-|Notifications|[Mako](https://github.com/emersion/mako)|
-|Lock|[Hyprlock](https://github.com/hyprwm/hyprlock/)|
-|Terminal|[Kitty](https://github.com/kovidgoyal/kitty)|
-|Power menu|[Wlogout](https://github.com/ArtsyMacaw/wlogout)|
-|Text editor|[VSCode](https://code.visualstudio.com/) and [Zeditor](https://zed.dev/)|
-|VSCode theme|[My own](https://marketplace.visualstudio.com/items?itemName=karasevuy.va-11-hall-a-inspired-theme) + [Iconsolata](https://fonts.google.com/specimen/Inconsolata)|
-|Zeditor theme|[Duskfox blurred](https://zed.dev/extensions/nvim-nightfox)|
-|File manager|[Yazi](https://github.com/sxyazi/yazi)|
-|Wallpapers|[swww](https://github.com/LGFae/swww)|
-|GTK theme|[Tokyonight](https://github.com/Fausto-Korpsvart/Tokyonight-GTK-Theme) + [CBPW Font](https://www.dafont.com/cyberpunkwaifus.font)|
-|[SDDM](https://wiki.archlinux.org/title/SDDM) theme|Can find in here|
-|Grub theme|Can find in here|
-|Web browser|[Firefox](https://www.firefox.com/en-US/)|
-|Firefox theme|[Textfox](https://github.com/sheeeng/adriankarlen-textfox/blob/main/readme.md) + [Colors](https://color.firefox.com/?theme=XQAAAAIZAQAAAAAAAABBKYhm849SCia3ftKEGccwS-xMDPr6QjyjB45W7s1iIrDvVaYoZsTt435quL77NpKNXOiEBW9XzRKM3iEUw_DVsfcURsvuj49T9-mcIwM9uHfj0YsBCkfKEwqNkT7Nm0UI1W71UV1KkBM3rz1dbf97O4h3yVi4ooIvUG5qoXNA-RirnAw0B5IFSP3qXZuj9ChAd_BXtJg6q0fWmYPaCy6_rP7Bq7zzOdv_Y7_7AA) (need extension)|
+<p align="center">
+  <img src="/assets/preview.png" alt="Theme preview" />
+</p>
 
-I think that's mostly it. Keep in mind that all of this stuff you should install yourself if you want to, in this repo you can find only dots or themes. Installation script will ask if you want to install SDDM or GRUB themes tho (doesn't check for installation)
-###
-### Installation
+> [!NOTE]
+> This project is a fork of [valhallaDots](https://github.com/happyzxzxz/valhallaDots) by happyzxzxz
 
-    git clone https://github.com/happyzxzxz/valhallaDots
-    cd valhallaDots
+## :hammer_and_wrench: Installation
 
-    chmod +x install.sh
-    ./install.sh
-Don't forget to change `~/.config/hypr/hyprland.conf` for your configuration
+```bash
+# clone this repo
+git clone https://github.com/kexiku/valhalla.git
+cd valhalla
 
-### More about grub theme
-It should work fine, but if your resolution is something else than **1920x1080** then you need to change font size:
+# run the installation script
+ chmod +x install.sh
+./install.sh
+```
 
-    chmod +x changeFont.sh
-    sudo ./changeFont.sh <size>
-Where `<size>` is your font size. Default for FullHD is **42**
+### :screwdriver: Manual installation
+
+If you'd like to do the work manually:
+
+- Clone this repo:
+
+```bash
+git clone https://github.com/kexiku/valhalla.git
+```
+
+- Resize the GRUB background image with ImageMagick:  
+  <details>
+  <summary><i>Why?</i></summary>
+
+  Cause it's the only workaround to keep the theme's layout consistent across different screen resolutions
+  </details>
+
+```bash
+# Set your screen resolution:
+export SCREEN_WIDTH=1920 # for FUllHD screens
+export SCREEN_HEIGHT=1080 # for FUllHD screens
+
+# Find 90% of your screen height:
+export GRUB_BG_HEIGHT=$(echo $((${SCREEN_HEIGHT} * 90 / 100)))
+
+# Resize the background image:
+magick convert valhalla/valhalla/background_original.png \
+  -resize x${GRUB_BG_HEIGHT} \
+  -gravity NorthWest \
+  -background none \
+  -extent ${SCREEN_WIDTH}x${SCREEN_HEIGHT} \
+  valhalla/valhalla/background.png
+```
+
+- Copy the theme directory to the custom themes folder:
+
+```bash
+sudo mkdir /boot/grub/themes # if it doesn't exist
+sudo cp -r valhalla/valhalla /boot/grub/themes
+```
+
+- Open GRUB config (`/etc/default/grub`)
+
+- Add these lines to the end of the config file:
+
+```bash
+# Path to custom theme
+GRUB_THEME="/boot/grub/themes/valhalla/theme.txt"
+
+# Path to custom background
+GRUB_BACKGROUND="/boot/grub/themes/valhalla/background.png"
+```
+
+- Rebuild the config file:
+
+```bash
+sudo update-grub # Debian | Ubuntu
+sudo grub-mkconfig -o /boot/grub/grub.cfg # Arch
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg # Fedora
+```
+
+### :toolbox: Troubleshooting
+
+If your resolution is something else than `1920x1080`, you might need to change the font size:
+
+```bash
+chmod +x changeFont.sh
+sudo ./changeFont.sh <size> # default for FullHD is 42
+```
+
+### <p align="center"> 𓆩♡𓆪 </p>
