@@ -23,6 +23,7 @@ echo "| 2560×1440 (2K/QHD) | 56           |"
 echo "| 3840×2160 (4K/UHD) | 84           |"
 echo "╰-----------------------------------╯"
 echo
+
 read -rp "Your size: " font_size
 
 if ! [[ "$font_size" =~ ^[1-9][0-9]*$ ]]; then
@@ -66,20 +67,6 @@ sudo sed -i -E "s|(${FONT_NAME})[[:space:]]*[0-9]+|\1 ${font_size}|g" "$THEME_FI
 echo "Font reference set to '${FONT_NAME} ${font_size}'."
 
 # Update config
-echo "Updating GRUB config..."
-
-if command -v update-grub &>/dev/null; then
-  sudo update-grub
-
-elif command -v grub2-mkconfig &>/dev/null; then
-  sudo grub2-mkconfig -o /boot/grub2/grub.cfg
-
-elif command -v grub-mkconfig &>/dev/null; then
-  sudo grub-mkconfig -o /boot/grub/grub.cfg
-
-else
-  echo "Error: Could not find a GRUB configuration command."
-  exit 1
-fi
+"${SOURCE_DIR}/src/update_grub.sh"
 
 echo "Done!"
