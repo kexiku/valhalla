@@ -10,6 +10,8 @@
 
 ## :hammer_and_wrench: Installation
 
+> :warning: Make sure your GRUB directory is `/boot/grub`
+
 ```bash
 # clone this repo
 git clone https://github.com/kexiku/valhalla.git
