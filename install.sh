@@ -9,19 +9,21 @@ THEME_FILE="${GRUB_THEMES_DIR}/valhalla/theme.txt"
 BACKGROUND="${GRUB_THEMES_DIR}/valhalla/background.png"
 
 # Copy fonts
-echo "🍷 Preparing fonts..."
+echo "🥃 Preparing fonts..."
 
 mkdir -p "$FONTS_DIR"
 cp -r "$SOURCE_DIR"/fonts/* "$FONTS_DIR"
 
 # Copy theme directory
-echo "🍸 Adding GRUB theme..."
+echo "🍺 Adding GRUB theme..."
 
 sudo mkdir -p "$GRUB_THEMES_DIR"
 sudo cp -r "${SOURCE_DIR}/valhalla" "$GRUB_THEMES_DIR"
 
 # Edit config
 echo "🍹 Mixing properties..."
+
+sudo cp /etc/default/grub /etc/default/grub.bak # Make a config backup
 
 if grep -q "^GRUB_THEME=" /etc/default/grub; then
   sudo sed -i "s|^GRUB_THEME=.*|GRUB_THEME=\"$THEME_FILE\"|" /etc/default/grub
@@ -42,20 +44,20 @@ else
 fi
 
 # Update config
-echo "🥃 Blending GRUB config..."
+echo "🍷 Blending GRUB config..."
 
 chmod +x "${SOURCE_DIR}/src/update_grub.sh"
 "${SOURCE_DIR}/src/update_grub.sh"
 
 # Change font size
-echo "If your screen resolution differs from 1920x1080, you might want to change the font size."
+echo "💡 If your screen resolution differs from 1920x1080, you might want to change the font size."
 read -rp "Do you want to change it now? (y/n): " change_font
 
 if [[ "$change_font" =~ ^[Yy]$ ]]; then
   chmod +x "${SOURCE_DIR}/src/change_font.sh"
   "${SOURCE_DIR}/src/change_font.sh"
 else
-  echo "Fallback to the default font size (42)."
+  echo "Fallback to the default font size (42)"
 fi
 
-echo "🍺 Served."
+echo "🍸 Served"
