@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+echo "[grub]"
+
 if command -v update-grub &>/dev/null; then
   sudo update-grub
 
