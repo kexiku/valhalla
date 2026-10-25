@@ -8,7 +8,7 @@
 > [!NOTE]
 > This project is a fork of [valhallaDots](https://github.com/happyzxzxz/valhallaDots) by happyzxzxz
 
-### Fork changes
+### Fork features
 
 - Add terminal background image
 - Clean everything except GRUB theme
@@ -19,11 +19,11 @@
 > :warning: Make sure your GRUB directory is `/boot/grub`
 
 ```bash
-# clone this repo
+# Clone this repo
 git clone https://github.com/kexiku/valhalla.git
 
-# run the installation script
- chmod +x install.sh
+# Run the installation script
+chmod +x install.sh
 ./install.sh
 ```
 
@@ -73,5 +73,9 @@ cd ./valhalla/src
 chmod +x change_font.sh
 sudo ./change_font.sh
 ```
+
+## :scroll: Credits
+
+[Background image](/valhalla/background_full.png) by [@jill_stg](https://x.com/jill_stg/status/2046675594470154297)
 
 ### <p align="center"> 𓆩♡𓆪 </p>
