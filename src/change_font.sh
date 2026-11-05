@@ -1,36 +1,33 @@
 #!/bin/bash
-set -e
-
-SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-
-FONT_NAME="CyberpunkWaifus"
-FONTS_DIR="$HOME/.local/share/fonts"
-FONT_SRC="${FONTS_DIR}/${FONT_NAME}.ttf"
-
-THEME_DIR="/boot/grub/themes/valhalla"
-THEME_FILE="${THEME_DIR}/theme.txt"
-
-# Check grub-mkfont
-if command -v grub-mkfont &>/dev/null; then
-  GRUB_MKFONT="grub-mkfont"
-elif command -v grub2-mkfont &>/dev/null; then
-  GRUB_MKFONT="grub2-mkfont"
-else
-  echo "Error: Could not locate grub-mkfont."
-  exit 1
-fi
-
-# Check if font exists
-if [[ ! -f "$FONT_SRC" ]]; then
-  echo "Error: font file not found at '$FONT_SRC'."
-  exit 1
-fi
+set -euo pipefail
 
 # Check if theme.txt exists
 if [[ ! -f "$THEME_FILE" ]]; then
-  echo "Error: theme file is missing."
+  echo "Error: theme file is missing." >&2
   exit 1
 fi
+
+# Set GRUB font converter
+if command -v grub-mkfont &>/dev/null; then
+  GRUB_MKFONT="grub-mkfont"
+
+elif command -v grub2-mkfont &>/dev/null; then
+  GRUB_MKFONT="grub2-mkfont"
+
+else
+  echo "Error: Could not locate grub-mkfont." >&2
+  exit 1
+fi
+
+FONT_NAME="CyberpunkWaifus"
+USER_FONTS_DIR="$HOME/.local/share/fonts"
+FONT_SRC="${USER_FONTS_DIR}/${FONT_NAME}.ttf"
+
+# Copy fonts
+echo "🥤 Preparing fonts..."
+
+mkdir -p "$USER_FONTS_DIR"
+cp -r "$SOURCE_DIR"/fonts/* "$USER_FONTS_DIR"
 
 # Define font size
 echo -e "Write your preferred font size.\n"
@@ -52,22 +49,23 @@ if ! [[ "$font_size" =~ ^[1-9][0-9]*$ ]]; then
 fi
 
 # Generate font
-echo "🪶 Generating GRUB font..."
+echo "🥃 Generating GRUB font..."
 
-NEW_FONT_FILE="${FONT_NAME}${font_size}.pf2"
-NEW_FONT_PATH="${THEME_DIR}/${NEW_FONT_FILE}"
+NEW_FONT_PATH="${THEME_DIR}/${FONT_NAME}${font_size}.pf2"
 
 sudo "$GRUB_MKFONT" -s "$font_size" -o "$NEW_FONT_PATH" "$FONT_SRC"
 
 # Update theme.txt
-echo "🗒️ Updating font reference in '$THEME_FILE'..."
+echo "🍶 Updating font reference in $THEME_FILE..."
 
 sudo sed -i -E "s|(${FONT_NAME})[[:space:]]*[0-9]+|\1 ${font_size}|g" "$THEME_FILE"
 
 echo "Font reference set to '${FONT_NAME} ${font_size}'."
 
-# Update config
-chmod +x "${SOURCE_DIR}/update_grub.sh"
-"${SOURCE_DIR}/update_grub.sh"
+# Update GRUB config
+echo "🍷 Blending GRUB config..."
 
-echo "Done!"
+echo "[grub]"
+sudo "$GRUB_UPDATE"
+
+echo "🍸 Served"
