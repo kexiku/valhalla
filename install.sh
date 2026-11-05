@@ -1,12 +1,13 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
-FONTS_DIR="$HOME/.local/share/fonts"
-GRUB_THEMES_DIR="/boot/grub/themes"
-THEME_FILE="${GRUB_THEMES_DIR}/valhalla/theme.txt"
-BACKGROUND="${GRUB_THEMES_DIR}/valhalla/background.png"
+FONTS_DIR="${HOME}/.local/share/fonts"
+GRUB_DIR="/boot/grub"
+THEMES_DIR="${GRUB_DIR}/themes"
+THEME_FILE="${THEMES_DIR}/valhalla/theme.txt"
+BACKGROUND="${THEMES_DIR}/valhalla/background.png"
 
 # Copy fonts
 echo "🥃 Preparing fonts..."
@@ -17,8 +18,16 @@ cp -r "$SOURCE_DIR"/fonts/* "$FONTS_DIR"
 # Copy theme directory
 echo "🍺 Adding GRUB theme..."
 
-sudo mkdir -p "$GRUB_THEMES_DIR"
-sudo cp -r "${SOURCE_DIR}/valhalla" "$GRUB_THEMES_DIR"
+need_sudo_password() {
+  ! sudo -n true 2>/dev/null
+}
+
+if need_sudo_password; then
+  echo "⚠️ Root privileges are required to write to the ${GRUB_DIR}"
+fi
+
+sudo mkdir -p "$THEMES_DIR"
+sudo cp -r "${SOURCE_DIR}/valhalla" "$THEMES_DIR"
 
 # Edit config
 echo "🍹 Mixing properties..."

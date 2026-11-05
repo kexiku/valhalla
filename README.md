@@ -76,6 +76,6 @@ sudo ./change_font.sh
 
 ## :scroll: Credits
 
-[Background image](/valhalla/background_full.png) by @jill_stg ([source](https://x.com/jill_stg/status/2046675594470154297))
+[Background image](https://x.com/jill_stg/status/2046675594470154297) by @jill_stg
 
 ### <p align="center"> 𓆩♡𓆪 </p>
