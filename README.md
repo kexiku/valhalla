@@ -10,9 +10,10 @@
 
 ### Fork features
 
-- Add terminal background image
-- Clean everything except GRUB theme
-- Make installation more accessible for different setups
+- Terminal background image
+- Interactive menu
+- User-friendly prompts
+- Distro-independent installation
 
 ## :takeout_box: Installation
 
@@ -76,6 +77,6 @@ sudo ./change_font.sh
 
 ## :scroll: Credits
 
-[Background image](https://x.com/jill_stg/status/2046675594470154297) by @jill_stg
+- [Background image](https://x.com/jill_stg/status/2046675594470154297) by @jill_stg
 
 ### <p align="center"> 𓆩♡𓆪 </p>
