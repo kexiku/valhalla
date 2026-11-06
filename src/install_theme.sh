@@ -4,16 +4,16 @@ set -euo pipefail
 # Copy theme directory
 echo "🍺 Adding GRUB theme..."
 
-need_sudo_password() {
+sudo_password_expired() {
   ! sudo -n true 2>/dev/null
 }
 
-if need_sudo_password; then
+if sudo_password_expired; then
   echo "⚠️ Root privileges are required to write to the ${GRUB_DIR}"
 fi
 
-sudo mkdir -p "${GRUB_DIR}/themes"
-sudo cp -r "${SOURCE_DIR}/valhalla" "${GRUB_DIR}/themes"
+sudo mkdir -p "$THEME_DIR"
+sudo cp -r "$SOURCE_DIR"/valhalla/* "$THEME_DIR"
 
 # Edit config
 echo "🍹 Mixing properties..."
@@ -42,7 +42,7 @@ fi
 echo "🍷 Blending GRUB config..."
 
 echo "[grub]"
-sudo "$GRUB_UPDATE"
+sudo $GRUB_MKCONFIG -o "${GRUB_DIR}/grub.cfg"
 
 # Change font size
 echo "If your screen resolution differs from 1920x1080, you might want to change the font size."

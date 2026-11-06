@@ -15,27 +15,23 @@ else
   exit 1
 fi
 
-# Set GRUB font converter
-if command -v grub-mkfont &>/dev/null; then
-  GRUB_MKFONT="grub-mkfont"
+# Locate GRUB font converter
+GRUB_MKFONT=""
 
-elif command -v grub2-mkfont &>/dev/null; then
-  GRUB_MKFONT="grub2-mkfont"
+for cmd in grub-mkfont grub2-mkfont; do
+  if command -v $cmd &>/dev/null; then
+    GRUB_MKFONT=$cmd
+    break
+  fi
+done
 
-else
-  echo "Error: Could not locate grub-mkfont." >&2
+if [[ -z $GRUB_MKFONT ]]; then
+  echo "Error: Could not find a GRUB font maker." >&2
   exit 1
 fi
 
 FONT_NAME="CyberpunkWaifus"
-USER_FONTS_DIR="$HOME/.local/share/fonts"
-FONT_SRC="${USER_FONTS_DIR}/${FONT_NAME}.ttf"
-
-# Copy fonts
-echo "🥤 Preparing fonts..."
-
-mkdir -p "$USER_FONTS_DIR"
-cp -r "$SOURCE_DIR"/fonts/* "$USER_FONTS_DIR"
+FONT_SRC="${SOURCE_DIR}/fonts/${FONT_NAME}.ttf"
 
 # Define font size
 echo -e "Write your preferred font size.\n"
@@ -61,11 +57,11 @@ echo "🥃 Generating GRUB font..."
 
 NEW_FONT_PATH="${THEME_DIR}/${FONT_NAME}${font_size}.pf2"
 
-need_sudo_password() {
+sudo_password_expired() {
   ! sudo -n true 2>/dev/null
 }
 
-if need_sudo_password; then
+if sudo_password_expired; then
   echo "⚠️ Root privileges are required to write to the ${GRUB_DIR}"
 fi
 
@@ -82,7 +78,7 @@ echo "Font reference set to '${FONT_NAME} ${font_size}'."
 echo "🍷 Blending GRUB config..."
 
 echo "[grub]"
-sudo "$GRUB_UPDATE"
+sudo $GRUB_MKCONFIG -o "${GRUB_DIR}/grub.cfg"
 
 echo "🍸 Served"
 exit 0

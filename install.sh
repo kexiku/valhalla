@@ -2,24 +2,8 @@
 set -euo pipefail
 
 # Locate script directory
-export SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-
-# Set GRUB update command
-export GRUB_UPDATE=""
-
-if command -v update-grub &>/dev/null; then
-  GRUB_UPDATE="update-grub"
-
-elif command -v grub-mkconfig &>/dev/null; then
-  GRUB_UPDATE="grub-mkconfig -o /boot/grub/grub.cfg"
-
-elif command -v grub2-mkconfig &>/dev/null; then
-  GRUB_UPDATE="grub2-mkconfig -o /boot/grub2/grub.cfg"
-
-else
-  echo "Error: Could not find a GRUB configuration command." >&2
-  exit 1
-fi
+SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+export SOURCE_DIR
 
 # Locate GRUB directory
 export GRUB_DIR=""
@@ -33,6 +17,21 @@ done
 
 if [[ -z $GRUB_DIR ]]; then
   echo "Error: could not locate the GRUB directory." >&2
+  exit 1
+fi
+
+# Locate GRUB config generator
+export GRUB_MKCONFIG=""
+
+for cmd in grub-mkconfig grub2-mkconfig; do
+  if command -v $cmd &>/dev/null; then
+    GRUB_MKCONFIG=$cmd
+    break
+  fi
+done
+
+if [[ -z $GRUB_MKCONFIG ]]; then
+  echo "Error: Could not find a GRUB configuration command." >&2
   exit 1
 fi
 
@@ -51,17 +50,17 @@ select opt in "${options[@]}"; do
   case "$REPLY" in
     "1")
       bash "$SOURCE_DIR/src/install_theme.sh"
-      exit 0
+      break
       ;;
     "2")
       bash "$SOURCE_DIR/src/change_font.sh"
-      exit 0
+      break
       ;;
-    "3"|q)
-      exit 0
+    "3"|q|Q)
+      break
       ;;
     *)
-      echo "Invalid choice, please enter the value between 1-3."
+      echo "Invalid choice, please enter the correct value."
       ;;
   esac
 done
