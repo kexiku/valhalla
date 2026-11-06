@@ -42,7 +42,7 @@ fi
 echo "🍷 Blending GRUB config..."
 
 echo "[grub]"
-sudo $GRUB_MKCONFIG -o "${GRUB_DIR}/grub.cfg"
+sudo "$GRUB_MKCONFIG" -o "${GRUB_DIR}/grub.cfg"
 
 # Change font size
 echo "If your screen resolution differs from 1920x1080, you might want to change the font size."

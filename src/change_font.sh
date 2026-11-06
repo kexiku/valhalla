@@ -78,7 +78,7 @@ echo "Font reference set to '${FONT_NAME} ${font_size}'."
 echo "🍷 Blending GRUB config..."
 
 echo "[grub]"
-sudo $GRUB_MKCONFIG -o "${GRUB_DIR}/grub.cfg"
+sudo "$GRUB_MKCONFIG" -o "${GRUB_DIR}/grub.cfg"
 
 echo "🍸 Served"
 exit 0

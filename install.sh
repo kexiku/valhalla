@@ -48,15 +48,15 @@ options=("Install theme" "Change font" "Quit (q)")
 
 select opt in "${options[@]}"; do
   case "$REPLY" in
-    "1")
+    1)
       bash "$SOURCE_DIR/src/install_theme.sh"
       break
       ;;
-    "2")
+    2)
       bash "$SOURCE_DIR/src/change_font.sh"
       break
       ;;
-    "3"|q|Q)
+    3|q|Q)
       break
       ;;
     *)
