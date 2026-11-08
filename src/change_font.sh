@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+source "${SOURCE_DIR}/lib/config.sh"
+
 # Check if theme installed
 if [[ ! -f "$THEME_FILE" ]]; then
   echo "⚠️ Could not locate the theme file in ${THEME_DIR}"
@@ -14,24 +16,6 @@ else
   echo "Error: ${THEME_FILE} is missing." >&2
   exit 1
 fi
-
-# Locate GRUB font converter
-GRUB_MKFONT=""
-
-for cmd in grub-mkfont grub2-mkfont; do
-  if command -v $cmd &>/dev/null; then
-    GRUB_MKFONT=$cmd
-    break
-  fi
-done
-
-if [[ -z $GRUB_MKFONT ]]; then
-  echo "Error: Could not find a GRUB font maker." >&2
-  exit 1
-fi
-
-FONT_NAME="CyberpunkWaifus"
-FONT_SRC="${SOURCE_DIR}/fonts/${FONT_NAME}.ttf"
 
 # Define font size
 echo -e "Write your preferred font size.\n"

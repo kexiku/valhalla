@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+source "${SOURCE_DIR}/lib/config.sh"
+
 # Copy theme directory
 echo "🍺 Adding GRUB theme..."
 
