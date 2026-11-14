@@ -60,10 +60,4 @@ sudo sed -i -E "s|(${FONT_NAME})[[:space:]]*[0-9]+|\1 ${font_size}|g" "$THEME_FI
 
 echo "Font reference set to '${FONT_NAME} ${font_size}'."
 
-# Update GRUB config
-echo "🍷 Blending GRUB config..."
-
-echo "[grub]"
-sudo "$GRUB_MKCONFIG" -o "${GRUB_DIR}/grub.cfg"
-
 echo "🥃 Served"
