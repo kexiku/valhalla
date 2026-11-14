@@ -4,6 +4,9 @@ set -euo pipefail
 # Load config
 source "${ROOT_DIR}/lib/config.sh"
 
+# Add a separator line
+echo "[valhalla]"
+
 # Check if theme installed
 if [[ ! -f "$THEME_FILE" ]]; then
   echo "⚠️ Could not locate the theme file in ${THEME_DIR}"
@@ -14,7 +17,7 @@ if [[ ! -f "$THEME_FILE" ]]; then
     bash "${ROOT_DIR}/src/install_theme.sh"
     exit 0
   else
-    echo "Error: ${THEME_FILE} is missing." >&2
+    echo "Cannot change the font: ${THEME_FILE} is missing." >&2
     exit 1
   fi
 fi
@@ -60,4 +63,4 @@ sudo sed -i -E "s|(${FONT_NAME})[[:space:]]*[0-9]+|\1 ${font_size}|g" "$THEME_FI
 
 echo "Font reference set to '${FONT_NAME} ${font_size}'."
 
-echo "🥃 Served"
+echo "🥃 Served."

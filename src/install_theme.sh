@@ -4,6 +4,9 @@ set -euo pipefail
 # Load config
 source "${ROOT_DIR}/lib/config.sh"
 
+# Add a separator line
+echo "[valhalla]"
+
 # Copy theme directory
 echo "🧊 Adding GRUB theme..."
 
@@ -49,11 +52,12 @@ echo "[grub]"
 sudo "$GRUB_MKCONFIG" -o "${GRUB_DIR}/grub.cfg"
 
 # Change font size
-echo "If your screen resolution differs from 1920x1080, you might want to change the font size."
+echo "[valhalla]"
+echo "🥡 If your screen resolution differs from 1920x1080, you might want to change the font size."
 read -rp "Do you want to change it now? (y/n): " change_font
 
 if [[ "$change_font" =~ ^[Yy]$ ]]; then
   bash "${ROOT_DIR}/src/change_font.sh"
 fi
 
-echo "🍸 Served"
+echo "🍸 Served."
