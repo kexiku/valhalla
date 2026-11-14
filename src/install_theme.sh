@@ -1,21 +1,22 @@
 #!/bin/bash
 set -euo pipefail
 
-source "${SOURCE_DIR}/lib/config.sh"
+# Load config
+source "${ROOT_DIR}/lib/config.sh"
 
 # Copy theme directory
-echo "🍺 Adding GRUB theme..."
+echo "🧊 Adding GRUB theme..."
 
-sudo_password_expired() {
+need_sudo_password() {
   ! sudo -n true 2>/dev/null
 }
 
-if sudo_password_expired; then
-  echo "⚠️ Root privileges are required to write to the ${GRUB_DIR}"
+if need_sudo_password; then
+  echo "🚬 Root privileges are required to write to the ${GRUB_DIR}"
 fi
 
 sudo mkdir -p "$THEME_DIR"
-sudo cp -r "$SOURCE_DIR"/valhalla/* "$THEME_DIR"
+sudo cp -r "$ROOT_DIR"/valhalla/* "$THEME_DIR"
 
 # Edit config
 echo "🍹 Mixing properties..."
@@ -51,7 +52,7 @@ echo "If your screen resolution differs from 1920x1080, you might want to change
 read -rp "Do you want to change it now? (y/n): " change_font
 
 if [[ "$change_font" =~ ^[Yy]$ ]]; then
-  source "${SOURCE_DIR}/src/change_font.sh"
+  source "${ROOT_DIR}/src/change_font.sh"
 fi
 
 echo "🍸 Served"

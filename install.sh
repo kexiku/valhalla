@@ -1,9 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-# Locate script directory
-SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-export SOURCE_DIR
+# Find root directory
+ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+export ROOT_DIR
 
 # Menu
 echo -e "▱▱▰▰▰ Welcome to VA-11 Hall-A ▰▰▰▱▱\n"
@@ -14,18 +14,18 @@ options=("Install theme" "Change font" "Quit (q)")
 select opt in "${options[@]}"; do
   case "$REPLY" in
     1)
-      bash "$SOURCE_DIR/src/install_theme.sh"
+      bash "$ROOT_DIR/src/install_theme.sh"
       break
       ;;
     2)
-      bash "$SOURCE_DIR/src/change_font.sh"
+      bash "$ROOT_DIR/src/change_font.sh"
       break
       ;;
-    3|q|Q)
+    3|q)
       break
       ;;
     *)
-      echo "Invalid choice, please enter the correct value."
+      echo "Invalid value, please choose the correct option (1-3)."
       ;;
   esac
 done

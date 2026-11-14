@@ -18,7 +18,7 @@ get_grub_mkconfig() {
   local cmd
 
   for cmd in grub-mkconfig grub2-mkconfig; do
-    if command -v $cmd &>/dev/null; then
+    if command -v "$cmd" &>/dev/null; then
       echo "$cmd"
       return 0
     fi
@@ -33,7 +33,7 @@ get_grub_mkfont() {
   local cmd
 
   for cmd in grub-mkfont grub2-mkfont; do
-    if command -v $cmd &>/dev/null; then
+    if command -v "$cmd" &>/dev/null; then
       echo "$cmd"
       return 0
     fi

@@ -1,7 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-source "${SOURCE_DIR}/lib/config.sh"
+# Load config
+source "${ROOT_DIR}/lib/config.sh"
 
 # Check if theme installed
 if [[ ! -f "$THEME_FILE" ]]; then
@@ -10,7 +11,7 @@ if [[ ! -f "$THEME_FILE" ]]; then
   read -rp "Do you want to install it now? (y/n): " install_theme
 
 if [[ "$install_theme" =~ ^[Yy]$ ]]; then
-  source "${SOURCE_DIR}/src/install_theme.sh"
+  source "${ROOT_DIR}/src/install_theme.sh"
   exit 0
 else
   echo "Error: ${THEME_FILE} is missing." >&2
@@ -37,22 +38,22 @@ if ! [[ "$font_size" =~ ^[1-9][0-9]*$ ]]; then
 fi
 
 # Generate font
-echo "🥃 Generating GRUB font..."
+echo "🍺 Generating GRUB font..."
 
 NEW_FONT_PATH="${THEME_DIR}/${FONT_NAME}${font_size}.pf2"
 
-sudo_password_expired() {
+need_sudo_password() {
   ! sudo -n true 2>/dev/null
 }
 
-if sudo_password_expired; then
-  echo "⚠️ Root privileges are required to write to the ${GRUB_DIR}"
+if need_sudo_password; then
+  echo "🚬 Root privileges are required to write to the ${GRUB_DIR}"
 fi
 
 sudo "$GRUB_MKFONT" -s "$font_size" -o "$NEW_FONT_PATH" "$FONT_SRC"
 
 # Update theme.txt
-echo "🍶 Updating font reference in ${THEME_FILE}..."
+echo "🍻 Updating font reference in ${THEME_FILE}..."
 
 sudo sed -i -E "s|(${FONT_NAME})[[:space:]]*[0-9]+|\1 ${font_size}|g" "$THEME_FILE"
 
@@ -64,5 +65,5 @@ echo "🍷 Blending GRUB config..."
 echo "[grub]"
 sudo "$GRUB_MKCONFIG" -o "${GRUB_DIR}/grub.cfg"
 
-echo "🍸 Served"
+echo "🥃 Served"
 exit 0

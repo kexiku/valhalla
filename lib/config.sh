@@ -1,5 +1,5 @@
 # GRUB variables
-source "${SOURCE_DIR}/lib/grub_helpers.sh"
+source "${ROOT_DIR}/lib/grub.sh"
 
 GRUB_DIR=$(get_grub_dir) || exit 1
 GRUB_MKCONFIG=$(get_grub_mkconfig) || exit 1
@@ -12,4 +12,4 @@ BACKGROUND="${THEME_DIR}/background.png"
 
 # Font variables
 FONT_NAME="CyberpunkWaifus"
-FONT_SRC="${SOURCE_DIR}/fonts/${FONT_NAME}.ttf"
+FONT_SRC="${ROOT_DIR}/fonts/${FONT_NAME}.ttf"
