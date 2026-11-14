@@ -10,12 +10,13 @@ if [[ ! -f "$THEME_FILE" ]]; then
   echo "Seems like the theme isn't installed on your system."
   read -rp "Do you want to install it now? (y/n): " install_theme
 
-if [[ "$install_theme" =~ ^[Yy]$ ]]; then
-  source "${ROOT_DIR}/src/install_theme.sh"
-  exit 0
-else
-  echo "Error: ${THEME_FILE} is missing." >&2
-  exit 1
+  if [[ "$install_theme" =~ ^[Yy]$ ]]; then
+    bash "${ROOT_DIR}/src/install_theme.sh"
+    exit 0
+  else
+    echo "Error: ${THEME_FILE} is missing." >&2
+    exit 1
+  fi
 fi
 
 # Define font size
@@ -33,7 +34,7 @@ echo
 read -rp "Your size: " font_size
 
 if ! [[ "$font_size" =~ ^[1-9][0-9]*$ ]]; then
-  echo "Error: size must be a positive integer."
+  echo "Error: size must be a positive integer." >&2
   exit 1
 fi
 
@@ -66,4 +67,3 @@ echo "[grub]"
 sudo "$GRUB_MKCONFIG" -o "${GRUB_DIR}/grub.cfg"
 
 echo "🥃 Served"
-exit 0

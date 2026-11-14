@@ -21,7 +21,8 @@ sudo cp -r "$ROOT_DIR"/valhalla/* "$THEME_DIR"
 # Edit config
 echo "🍹 Mixing properties..."
 
-sudo cp /etc/default/grub /etc/default/grub.bak # Make a config backup
+# Make a config backup
+[[ -f /etc/default/grub.bak ]] || sudo cp /etc/default/grub /etc/default/grub.bak
 
 if grep -q "^GRUB_THEME=" /etc/default/grub; then
   sudo sed -i "s|^GRUB_THEME=.*|GRUB_THEME=\"$THEME_FILE\"|" /etc/default/grub
@@ -52,8 +53,7 @@ echo "If your screen resolution differs from 1920x1080, you might want to change
 read -rp "Do you want to change it now? (y/n): " change_font
 
 if [[ "$change_font" =~ ^[Yy]$ ]]; then
-  source "${ROOT_DIR}/src/change_font.sh"
+  bash "${ROOT_DIR}/src/change_font.sh"
 fi
 
 echo "🍸 Served"
-exit 0

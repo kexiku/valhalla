@@ -14,11 +14,11 @@ options=("Install theme" "Change font" "Quit (q)")
 select opt in "${options[@]}"; do
   case "$REPLY" in
     1)
-      bash "$ROOT_DIR/src/install_theme.sh"
+      bash "${ROOT_DIR}/src/install_theme.sh"
       break
       ;;
     2)
-      bash "$ROOT_DIR/src/change_font.sh"
+      bash "${ROOT_DIR}/src/change_font.sh"
       break
       ;;
     3|q)
